@@ -30,13 +30,13 @@ export const App = () => {
             <Text>
               With the help of this tutorial app you'll be able to quickly and easily build
               your own app that uses synthetic configurations. This is also a fully functional
-              app that allows bulk updates of synthetic monitor configurations. You can adapt
+              app that allows bulk updates of synthetic monitors configurations. You can adapt
               this approach to your purposes and apply it to other types of configurations.
             </Text>
             <Heading level={4}>This app demonstrates</Heading>
             <List ordered={false}>
-              <Text>how to update synthetic monitor configurations,</Text>
-              <Text>how to deal with bulk updates of synthetic monitor configurations,</Text>
+              <Text>how to build your own app that uses Dynatrace API and core UI components,</Text>
+              <Text>how to deal with bulk updates of synthetic monitors configurations,</Text>
               <Text>how to display the results in the app UI.</Text>
             </List>
             <MainViewCard></MainViewCard>
