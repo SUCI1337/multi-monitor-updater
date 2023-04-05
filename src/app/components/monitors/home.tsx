@@ -1,11 +1,12 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   Button,
+  Divider,
   Flex,
+  Heading,
   LoadingIndicator,
   Modal,
   OverlayContainer,
-  TitleBar,
   useContainerBreakpoint,
 } from '@dynatrace/strato-components-preview';
 import {MonitorList} from './monitor-list';
@@ -27,10 +28,8 @@ import {Text} from "@dynatrace/strato-components-preview/typography";
 
 const StyledWrapper = styled.div`
   color: ${Colors.Text.Neutral.Default};
-  background: ${Colors.Theme.Background[20]};
-  border-radius: ${Borders.Radius.Container.Default};
-  padding: ${Spacings.Size8};
-  padding-right: ${Spacings.Size20};
+  background: ${Colors.Theme.Background[10]};
+  border-radius: ${Borders.Radius.Surface.Default};
   text-decoration: "none";
   display: "block";
 `;
@@ -109,7 +108,7 @@ export const Home = (): JSX.Element => {
                 .sort(compareMonitorNames());
             setIsListLoading(false);
             setFilteredMonitors(monitors);
-            setSelectedForPreview(monitors[0].entityId)
+            setSelectedForPreview(monitors[0]?.entityId)
           }
         });
     }
@@ -136,23 +135,30 @@ export const Home = (): JSX.Element => {
 
   return (
     <StyledWrapper ref={containerRef}>
-      <Flex gap={16} flexDirection="column">
-        <TitleBar>
-          <TitleBar.Title>Synthetic monitors</TitleBar.Title>
-          <TitleBar.Suffix>
+      <Flex flexDirection="column" gap={24}>
+        <Flex flexWrap={"wrap"}>
+          <Flex flexDirection={"row"} justifyContent={"space-between"} flexGrow={1}>
+            <Heading level={4}>Synthetic monitors</Heading>
             <Flex flexDirection={"row"} alignItems={"baseline"}>
-              {selectedForEdit.length > 0 && <Text>{selectedForEdit.length} {countMonitors()} selected</Text>}
-              <Button variant="accent" onClick={() => setShowFormModal(true)} disabled={selectedForEdit.length === 0}>
+              <Text textStyle={"default-emphasized"} style={{
+                backgroundColor: `${Colors.Theme.Neutral["30"]}`,
+                borderRadius: `${Borders.Radius.Field.Emphasized}`,
+                padding: `${Spacings.Size2} ${Spacings.Size6}`
+              }}>
+                {selectedForEdit.length === 0 ? 'No' : selectedForEdit.length} {countMonitors()} selected
+              </Text>
+              <Button variant="primary" onClick={() => setShowFormModal(true)} disabled={selectedForEdit.length === 0}>
                 Edit
               </Button>
             </Flex>
-          </TitleBar.Suffix>
-        </TitleBar>
+          </Flex>
+          <Divider/>
+        </Flex>
         <Grid
           width="100%"
           gridTemplateColumns="repeat(2, 1fr);"
           gridTemplateAreas={getGridTemplateAreas()}
-          gap={24}
+          columnGap={24}
         >
           <Grid gridItem gridArea="filters">
             <Flex flexDirection={"row"} alignItems={"baseline"} >
@@ -179,7 +185,7 @@ export const Home = (): JSX.Element => {
           </Grid>
         </Grid>
         <OverlayContainer>
-          <Modal title="Bulk update" size="medium" dismissible show={showFormModal} onDismiss={() => setShowFormModal(false)}>
+          <Modal title="Bulk update" size="small" dismissible show={showFormModal} onDismiss={() => setShowFormModal(false)}>
             <BulkUpdateModal selectedIds={selectedForEdit} showFormHandler={setShowFormModal} setSelectedForPreview={setSelectedForPreview} />
           </Modal>
         </OverlayContainer>
