@@ -124,12 +124,13 @@ export const BulkUpdateModal = ({ selectedIds, onDismiss }: BulkUpdateModalProps
       ) : null}
       <Flex flexDirection='row' justifyContent='flex-start'>
         {updateStatus === 'success' || updateStatus === 'error' ? (
-          <Button data-testid='close-modal-button' color='primary' onClick={onDismiss}>
+          <Button data-testid='close-modal-button' color='primary' variant={'accent'} onClick={onDismiss}>
             Close
           </Button>
         ) : (
           <>
-            <Button color='primary' disabled={!isSuccess || updateStatus === 'loading'} onClick={saveUpdateHandler}>
+            <Button color='primary' variant={'accent'} disabled={!isSuccess || updateStatus === 'loading'}
+                    onClick={saveUpdateHandler}>
               Update
             </Button>
             <Button color='neutral' onClick={onDismiss}>
