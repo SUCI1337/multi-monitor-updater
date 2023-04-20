@@ -1,24 +1,32 @@
-import React, {Fragment, useRef, useState} from 'react';
-import {Flex} from '@dynatrace/strato-components-preview';
-import {CodeEditor} from '@dynatrace/strato-components-preview/editors';
-import {FormField, Select, SelectOption} from '@dynatrace/strato-components-preview/forms';
-import {BulkConfig, ConfigParam, ConfigParamChangeAction, InitialBulkConfig} from '../../utils/models';
-import {ParameterUpdateDescription} from './parameter-update-description';
-import {validateParamType} from '../../utils/display';
-import {Text} from '@dynatrace/strato-components-preview/typography';
+import React, { Fragment, useRef, useState } from 'react';
+import { Flex } from '@dynatrace/strato-components-preview';
+import { CodeEditor } from '@dynatrace/strato-components-preview/editors';
+import { FormField, Select, SelectOption } from '@dynatrace/strato-components-preview/forms';
+import { BulkConfig, ConfigParam, ConfigParamChangeAction, InitialBulkConfig } from '../../utils/models';
+import { ParameterUpdateDescription } from './ParameterUpdateDescription';
+import { validateParamType } from '../../utils/display';
+import { Text } from '@dynatrace/strato-components-preview/typography';
 import Colors from '@dynatrace/strato-design-tokens/colors';
 
 interface ParamUpdateSectionProps {
   availableConfigParameters: ConfigParam[];
   selectedParam: ConfigParam[] | null;
-  setSelectedParam: (param: ConfigParam[]) => void;
+  onSelectedParamChange: (param: ConfigParam[]) => void;
   dispatchParamChangeFn: (action: ConfigParamChangeAction) => void;
   initialBulkConfig: InitialBulkConfig;
   updatedBulkConfig: BulkConfig;
 }
 
-export const ParameterUpdateSection = (props: ParamUpdateSectionProps): JSX.Element => {
-  const { availableConfigParameters, selectedParam, setSelectedParam, dispatchParamChangeFn, initialBulkConfig, updatedBulkConfig } = props;
+export const ParameterUpdateSection = (props: ParamUpdateSectionProps) => {
+  const {
+    availableConfigParameters,
+    selectedParam,
+    onSelectedParamChange: setSelectedParam,
+    dispatchParamChangeFn,
+    initialBulkConfig,
+    updatedBulkConfig,
+  } = props;
+
   const getInitialContent = (selectedParam: ConfigParam[] | null) => {
     if (selectedParam) {
       const wrapper: BulkConfig = {};
@@ -35,9 +43,9 @@ export const ParameterUpdateSection = (props: ParamUpdateSectionProps): JSX.Elem
       return JSON.stringify(wrapper, null, 2);
     }
     return '';
-  }
+  };
 
-  const [editorContent, setEditorContent] = useState<string>(getInitialContent(selectedParam));
+  const [editorContent, setEditorContent] = useState<string>(() => getInitialContent(selectedParam));
   const [error, setError] = useState<string | undefined>(undefined);
 
   const timeoutId = useRef<number | undefined>(undefined);
@@ -53,13 +61,16 @@ export const ParameterUpdateSection = (props: ParamUpdateSectionProps): JSX.Elem
         const { validatedConfig, error } = validateParamType(content, actionType);
         setError(error);
         if (validatedConfig) {
-          dispatchParamChangeFn({ type: actionType, updatedValue: validatedConfig });
+          dispatchParamChangeFn({
+            type: actionType,
+            updatedValue: validatedConfig,
+          });
         }
       }
     }, 500);
   };
 
-  const selectedConfigParamChangeHandler = (selectedKeys: ConfigParam[]) => {
+  function selectedConfigParamChangeHandler(selectedKeys: ConfigParam[]) {
     setSelectedParam(selectedKeys);
     const wrapper: BulkConfig = {};
     const currentKey = selectedKeys[0];
@@ -82,35 +93,32 @@ export const ParameterUpdateSection = (props: ParamUpdateSectionProps): JSX.Elem
       default:
         break;
     }
-    setEditorContent('');
-    setTimeout(() => {
-      setEditorContent(JSON.stringify(wrapper, null, 2))
-    }, 0)
-  };
+    setEditorContent(JSON.stringify(wrapper, null, 2));
+  }
 
   return (
     <Fragment>
-      <FormField label="Select configuration parameter">
-        <Select
-          name="config-parameter"
-          id="config-parameter-select"
-          selectedId={selectedParam}
-          onChange={selectedConfigParamChangeHandler}
-        >
-          {availableConfigParameters.map((configParameter: ConfigParam) => (
-            <SelectOption key={configParameter} id={configParameter}>
-              {configParameter}
-            </SelectOption>
-          ))}
-        </Select>
+      <FormField label='Select configuration parameter'>
+        {
+          <Select
+            name='config-parameter'
+            id='config-parameter-select'
+            selectedId={selectedParam}
+            onChange={selectedConfigParamChangeHandler}
+          >
+            {availableConfigParameters.map((configParameter: ConfigParam) => (
+              <SelectOption key={configParameter} id={configParameter}>
+                {configParameter}
+              </SelectOption>
+            ))}
+          </Select>
+        }
       </FormField>
       <Flex flexItem height={300}>
-        <CodeEditor language="json" lineWrap fullHeight value={editorContent} onChange={editorContentChangeHandler} />
+        <CodeEditor language='json' lineWrap fullHeight value={editorContent} onChange={editorContentChangeHandler} />
       </Flex>
-      {error && (
-        <Text style={{color: Colors.Text.Critical.Default}}>Error: {error}</Text>
-      )}
+      {error && <Text style={{ color: Colors.Text.Critical.Default }}>Error: {error}</Text>}
       <ParameterUpdateDescription selectedParam={selectedParam?.[0]} />
     </Fragment>
   );
-}
+};
