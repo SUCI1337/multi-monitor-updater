@@ -1,5 +1,5 @@
 import { syntheticMonitorsClient, SyntheticMonitorUpdate } from '@dynatrace-sdk/client-classic-environment-v1';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useState } from 'react';
 
 async function replaceMonitor(update: BulkUpdate) {
@@ -21,6 +21,7 @@ function useReplaceMonitor() {
 }
 
 export function useBulkUpdate() {
+  const queryClient = useQueryClient();
   const [status, setStatus] = useState<'idle' | 'loading' | 'error' | 'success'>('idle');
   const [progress, setProgress] = useState(0);
   const [total, setTotal] = useState(0);
@@ -32,20 +33,21 @@ export function useBulkUpdate() {
       setStatus('loading');
       const promises = updates.map((update) => {
         return mutation.mutateAsync(update, {
-          onSettled: () => setProgress((prev) => prev + 1),
+          onSettled: () => { setProgress((prev) => prev + 1) },
           onError: () => {
             setStatus('error');
           },
         });
       });
-      Promise.allSettled(promises).then((results) => {
+      return Promise.allSettled(promises).then((results) => {
         if (status !== 'error') {
           setStatus('success');
+          queryClient.invalidateQueries({ queryKey: ['monitor'], type: 'all' });
         }
         return results;
       });
     },
-    [mutation, status],
+    [mutation, status, queryClient],
   );
 
   return { progress, status, mutate, total };
