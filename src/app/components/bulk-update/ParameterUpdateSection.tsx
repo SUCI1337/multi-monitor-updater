@@ -72,6 +72,7 @@ export const ParameterUpdateSection = (props: ParamUpdateSectionProps) => {
 
   function selectedConfigParamChangeHandler(selectedKeys: ConfigParam[]) {
     setSelectedParam(selectedKeys);
+    setEditorContent('');
     const wrapper: BulkConfig = {};
     const currentKey = selectedKeys[0];
     switch (currentKey) {
@@ -115,7 +116,7 @@ export const ParameterUpdateSection = (props: ParamUpdateSectionProps) => {
         }
       </FormField>
       <Flex flexItem height={300}>
-        <CodeEditor language='json' lineWrap fullHeight value={editorContent} onChange={editorContentChangeHandler} />
+        <CodeEditor key={(selectedParam !== null && selectedParam[0]) || ''} language='json' lineWrap fullHeight value={editorContent} onChange={editorContentChangeHandler} />
       </Flex>
       {error && <Text style={{ color: Colors.Text.Critical.Default }}>Error: {error}</Text>}
       <ParameterUpdateDescription selectedParam={selectedParam?.[0]} />
