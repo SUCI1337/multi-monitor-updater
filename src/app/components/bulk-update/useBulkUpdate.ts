@@ -34,20 +34,21 @@ export function useBulkUpdate() {
       const promises = updates.map((update) => {
         return mutation.mutateAsync(update, {
           onSettled: () => { setProgress((prev) => prev + 1) },
-          onError: () => {
-            setStatus('error');
-          },
         });
       });
       return Promise.allSettled(promises).then((results) => {
-        if (status !== 'error') {
+        const isError = results.some((result) => result.status === 'rejected');
+
+        if (isError) {
+          setStatus('error')
+        } else {
           setStatus('success');
           queryClient.invalidateQueries({ queryKey: ['monitor'], type: 'all' });
         }
         return results;
       });
     },
-    [mutation, status, queryClient],
+    [mutation, queryClient],
   );
 
   return { progress, status, mutate, total };
