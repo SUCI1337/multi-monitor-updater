@@ -1,7 +1,7 @@
 import type { CliOptions } from 'dt-app';
 
 const config: CliOptions = {
-  environmentUrl: 'please-change.apps.dynatrace.com',
+  environmentUrl: 'https://umsaywsjuo.dev.apps.dynatracelabs.com',
   app: {
     name: 'Multi-Monitor Updater',
     version: '1.1.3',
