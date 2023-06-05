@@ -77,3 +77,4 @@ Outputs help for the DTP CLI.
 You can find more information on how to use all the features of the new Dynatrace Platform in the [Developer Portal](https://developer.dynatracelabs.com/).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
