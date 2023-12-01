@@ -21,12 +21,10 @@ const queryClient = new QueryClient({
 });
 
 const Routing = (
-  <>
-    <Route
-      path=''
-      element={<App />}>
-    </Route>
-  </>
+  <Route
+    path=''
+    element={<App />}>
+  </Route>
 )
 
 ReactDOM.render(

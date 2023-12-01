@@ -1,6 +1,6 @@
 import React, { Fragment, useMemo, useReducer, useState } from 'react';
 import { SyntheticMonitor } from '@dynatrace-sdk/client-classic-environment-v1';
-import { Button, Flex, LoadingIndicator, ProgressBar, Text } from '@dynatrace/strato-components-preview';
+import { Button, Flex, ProgressBar, Skeleton, Text } from '@dynatrace/strato-components-preview';
 import { ParameterUpdateSection } from './ParameterUpdateSection';
 import { getInitialBulkConfig } from '../../utils/display';
 import { BulkConfig, ConfigParam, ConfigParamChangeAction, InitialBulkConfig } from '../../utils/models';
@@ -101,7 +101,6 @@ export const BulkUpdateModal = ({ selectedIds, onDismiss }: BulkUpdateModalProps
 
   return initialBulkConfig ? (
     <Fragment>
-      {!initialBulkConfig && <LoadingIndicator loading={isLoading} />}
       {isError && <Text>Error: Could not fetch the requested configurations.</Text>}
       <Switch name='update-scope' value={saveCurrentOnly} onChange={setSaveCurrentOnly}>
         Save changes to the currently selected parameter only
@@ -140,5 +139,9 @@ export const BulkUpdateModal = ({ selectedIds, onDismiss }: BulkUpdateModalProps
         )}
       </Flex>
     </Fragment>
-  ) : null;
+  ) : (
+    <>
+      {isLoading && <Skeleton height={20} />}
+    </>
+  );
 };

@@ -3,8 +3,7 @@ import type { MonitorCollectionElement } from '@dynatrace-sdk/client-classic-env
 import {
   Button,
   DataTable,
-  Flex,
-  LoadingIndicator,
+  Flex, Skeleton,
   TableColumn,
   TableVariantConfig,
   Text,
@@ -70,7 +69,7 @@ export const MonitorList = (props: MonitorListProps) => {
     [onSelectedForPreviewHandler, selectedForPreview],
   );
 
-  const rowSelectionChangedHandler = (data: Array<MonitorCollectionElement>) => {
+  const rowSelectionChangedHandler = (selectedRows: Record<string, boolean> ,data: Array<MonitorCollectionElement>) => {
     onSelectedForEditChange(data.map((item) => item.entityId));
   };
 
@@ -81,12 +80,8 @@ export const MonitorList = (props: MonitorListProps) => {
     contained: true,
   };
 
-  if (isLoading) {
-    return <LoadingIndicator />;
-  }
-
   return monitors !== undefined && monitors.length > 0 ? (
-    <DataTable
+    <DataTable loading={isLoading}
       columns={columns}
       data={monitors}
       sortable
@@ -98,8 +93,14 @@ export const MonitorList = (props: MonitorListProps) => {
       <DataTable.Pagination pageSize={pageSize} onPageSizeChange={onPageSizeChange} onPageChange={onPageChange} />
     </DataTable>
   ) : (
-    <Flex paddingTop={8}>
-      <Text textStyle='base-emphasized'>No monitors found.</Text>
-    </Flex>
+    <>
+      {isLoading ? (
+        <Skeleton height={50} />
+      ) : (
+        <Flex paddingTop={8}>
+          <Text textStyle='base-emphasized'>No monitors found.</Text>
+        </Flex>
+      )}
+    </>
   );
 };

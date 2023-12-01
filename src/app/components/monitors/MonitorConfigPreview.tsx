@@ -1,8 +1,8 @@
 import React from 'react';
 import { CodeEditor } from '@dynatrace/strato-components-preview/editors';
-import { LoadingIndicator } from '@dynatrace/strato-components-preview';
 import { Text } from '@dynatrace/strato-components-preview/typography';
 import { useMonitor } from './useMonitor';
+import { Skeleton } from '@dynatrace/strato-components-preview';
 
 type MonitorConfigProps = { monitorId: string };
 
@@ -10,7 +10,7 @@ export const MonitorConfigPreview = ({ monitorId }: MonitorConfigProps) => {
   const { data: config, isLoading, error } = useMonitor(monitorId);
 
   if (isLoading) {
-    return <LoadingIndicator loading={isLoading} />;
+    return <Skeleton/>;
   }
 
   if (error) {
