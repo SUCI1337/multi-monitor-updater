@@ -18,7 +18,7 @@ export const App = () => {
           <Flex maxWidth={'80vw'} gap={16} flexDirection='column'>
             <TitleBar>
               <TitleBar.Title>
-                <Heading as='h1'>Multi-Monitor Updater</Heading>
+                <Heading as='h1'>Multi-Monitor Updater Sample</Heading>
               </TitleBar.Title>
               <TitleBar.Action>
                 <img

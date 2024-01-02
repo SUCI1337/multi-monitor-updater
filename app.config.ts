@@ -3,7 +3,7 @@ import type { CliOptions } from 'dt-app';
 const config: CliOptions = {
   environmentUrl: 'https://umsaywsjuo.dev.apps.dynatracelabs.com',
   app: {
-    name: 'Multi-Monitor Updater',
+    name: 'Multi-Monitor Updater Sample',
     version: '1.1.8',
     description: 'Verify and update your Synthetic monitor configurations',
     id: 'my.multi.monitor.updater',
